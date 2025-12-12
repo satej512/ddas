@@ -1,0 +1,49 @@
+.dashboard-container {
+  width: 100%;
+  padding: 30px;
+}
+
+.dashboard-title {
+  font-size: 35px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.upload-box {
+  max-width: 500px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 30px;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+.upload-box h2 {
+  margin-bottom: 10px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.upload-box p {
+  color: #d0d0d0;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.upload-btn {
+  padding: 12px 25px;
+  font-size: 16px;
+  background: #e50914;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.upload-btn:hover {
+  background: #f6121d;
+}
