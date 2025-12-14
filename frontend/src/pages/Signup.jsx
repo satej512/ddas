@@ -1,6 +1,7 @@
 import "../styles.css";
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -63,8 +64,8 @@ export default function Signup() {
         <p className="auth-text">{message}</p>
 
         <p className="auth-text">
-          Already have
-          an account? <a href="/login">Login</a>
+           Already have an account? <Link to="/login">Login</Link>
+
         </p>
       </form>
     </div>
