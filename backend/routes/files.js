@@ -1,47 +1,65 @@
 import express from "express";
 import File from "../models/file.js";
 import upload from "../utils/upload.js";
-import { generateHash } from "../utils/hash.js";
+import cloudinary from "../utils/cloudinary.js";
+import crypto from "crypto";
 
 const router = express.Router();
 
-// Upload Route (Cloudinary)
+// UPLOAD FILE
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    const fileUrl = req.file.path;        // Cloudinary URL
-    const publicId = req.file.filename;   // Cloudinary public_id
+    // 1️⃣ Create hash from file content
+    const hash = crypto
+      .createHash("sha256")
+      .update(req.file.buffer)
+      .digest("hex");
 
-    // generate hash from publicId (stable)
-    const hash = generateHash(Buffer.from(publicId));
-
+    // 2️⃣ Check duplicate BEFORE Cloudinary
     const existing = await File.findOne({ hash });
     if (existing) {
-      return res.json({ duplicate: true, message: "Duplicate File Found!" });
+      return res.json({
+        duplicate: true,
+        message: "Duplicate file already exists",
+      });
     }
 
-    const newFile = new File({
-      name: req.file.originalname,
-      size: req.file.size,
-      hash,
-      url: fileUrl,   // ✅ SAVE URL
-    });
+    // 3️⃣ Upload to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload_stream(
+      { folder: "ddas_uploads" },
+      async (error, result) => {
+        if (error) {
+          return res.status(500).json({ message: "Cloudinary upload failed" });
+        }
 
-    await newFile.save();
+        // 4️⃣ Save to MongoDB
+        const newFile = new File({
+          name: req.file.originalname,
+          size: req.file.size,
+          hash,
+          url: result.secure_url,
+        });
 
-    res.json({
-      duplicate: false,
-      message: "File uploaded successfully!",
-      url: fileUrl,
-    });
+        await newFile.save();
+
+        res.json({
+          duplicate: false,
+          message: "File uploaded successfully",
+          url: result.secure_url,
+        });
+      }
+    );
+
+    uploadResult.end(req.file.buffer);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Upload failed" });
   }
 });
 
-// Get All Files
+// GET FILES
 router.get("/", async (req, res) => {
-  const files = await File.find();
+  const files = await File.find().sort({ createdAt: -1 });
   res.json(files);
 });
 

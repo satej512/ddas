@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 const fileSchema = new mongoose.Schema({
   name: String,
   size: Number,
-  hash: String,
-  url: String, // 👈 Cloudinary URL
+  hash: { type: String, unique: true }, // 👈 IMPORTANT
+  url: String,
   createdAt: { type: Date, default: Date.now },
 });
 
