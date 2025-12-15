@@ -4,8 +4,8 @@ const fileSchema = new mongoose.Schema({
   name: String,
   size: Number,
   hash: String,
-  path: String,
-  createdAt: { type: Date, default: Date.now }
+  url: String, // 👈 Cloudinary URL
+  createdAt: { type: Date, default: Date.now },
 });
 
 export default mongoose.model("File", fileSchema);

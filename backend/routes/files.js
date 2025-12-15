@@ -1,35 +1,47 @@
 import express from "express";
-import multer from "multer";
-import fs from "fs";
-import path from "path";
 import File from "../models/file.js";
 import { generateHash } from "../utils/hash.js";
+import upload from "../utils/upload.js";
 
 const router = express.Router();
-const upload = multer({ dest: "backend/uploads/" });
 
-// Upload Route
+// Upload Route (Cloudinary)
 router.post("/upload", upload.single("file"), async (req, res) => {
-  const fileBuffer = fs.readFileSync(req.file.path);
-  const hash = generateHash(fileBuffer);
+  try {
+    // Cloudinary gives secure URL here
+    const fileUrl = req.file.path;
 
-  const existing = await File.findOne({ hash });
+    // Generate hash (simple version)
+    const hash = generateHash(Buffer.from(fileUrl));
 
-  if (existing) {
-    fs.unlinkSync(req.file.path);
-    return res.json({ duplicate: true, message: "Duplicate File Found!" });
+    const existing = await File.findOne({ hash });
+
+    if (existing) {
+      return res.json({
+        duplicate: true,
+        message: "Duplicate File Found!",
+        fileUrl: existing.url,
+      });
+    }
+
+    const newFile = new File({
+      name: req.file.originalname,
+      size: req.file.size,
+      hash,
+      url: fileUrl, // ✅ Cloudinary URL
+    });
+
+    await newFile.save();
+
+    res.json({
+      duplicate: false,
+      message: "File Uploaded Successfully!",
+      fileUrl,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Upload failed" });
   }
-
-  const newFile = new File({
-    name: req.file.originalname,
-    size: req.file.size,
-    hash,
-    path: req.file.path
-  });
-
-  await newFile.save();
-
-  res.json({ duplicate: false, message: "File Uploaded Successfully!" });
 });
 
 // Get All Files
