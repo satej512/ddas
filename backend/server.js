@@ -20,6 +20,12 @@ app.use(
 
 app.use(express.json());
 
+// ✅ SERVE UPLOADED FILES
+app.use(
+  "/uploads",
+  express.static(path.join(process.cwd(), "backend/uploads"))
+);
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/files", fileRoutes);
