@@ -9,7 +9,11 @@ const router = express.Router();
 // UPLOAD FILE
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    // 1️⃣ Create hash from file content
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // 1️⃣ Create hash from file bytes
     const hash = crypto
       .createHash("sha256")
       .update(req.file.buffer)
@@ -24,33 +28,39 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       });
     }
 
-    // 3️⃣ Upload to Cloudinary
-    const uploadResult = await cloudinary.uploader.upload_stream(
-      { folder: "ddas_uploads" },
-      async (error, result) => {
-        if (error) {
-          return res.status(500).json({ message: "Cloudinary upload failed" });
+    // 3️⃣ Upload to Cloudinary (image + audio + video)
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: "ddas_uploads",
+          resource_type: "auto", // 🔥 VERY IMPORTANT (fixes audio)
+        },
+        async (error, result) => {
+          if (error) {
+            console.error(error);
+            return res
+              .status(500)
+              .json({ message: "Cloudinary upload failed" });
+          }
+
+          // 4️⃣ Save to MongoDB
+          const newFile = new File({
+            name: req.file.originalname,
+            size: req.file.size,
+            hash,
+            url: result.secure_url,
+          });
+
+          await newFile.save();
+
+          return res.json({
+            duplicate: false,
+            message: "File uploaded successfully",
+            url: result.secure_url,
+          });
         }
-
-        // 4️⃣ Save to MongoDB
-        const newFile = new File({
-          name: req.file.originalname,
-          size: req.file.size,
-          hash,
-          url: result.secure_url,
-        });
-
-        await newFile.save();
-
-        res.json({
-          duplicate: false,
-          message: "File uploaded successfully",
-          url: result.secure_url,
-        });
-      }
-    );
-
-    uploadResult.end(req.file.buffer);
+      )
+      .end(req.file.buffer); // 👈 send file bytes
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Upload failed" });
