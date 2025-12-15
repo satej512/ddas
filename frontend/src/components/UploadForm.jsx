@@ -8,6 +8,7 @@ export default function UploadForm() {
 
   async function handleUpload(e) {
     e.preventDefault();
+
     if (!file) {
       setStatus("Please select a file");
       return;
@@ -20,15 +21,15 @@ export default function UploadForm() {
 
     const res = await fetch(API + "/upload", {
       method: "POST",
-      body: form
+      body: form,
     });
 
     const data = await res.json();
 
     if (data.duplicate) {
-      setStatus("Duplicate Found! File already exists.");
+      setStatus("❌ Duplicate file already exists");
     } else {
-      setStatus("File uploaded successfully.");
+      setStatus("✅ File uploaded successfully");
       window.dispatchEvent(new Event("refreshFiles"));
     }
   }
@@ -39,6 +40,7 @@ export default function UploadForm() {
         <input type="file" onChange={(e) => setFile(e.target.files[0])} />
         <button type="submit">Upload</button>
       </form>
+
       <p>{status}</p>
     </div>
   );

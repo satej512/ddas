@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API = "http://localhost:5000/api/files";
+const API = "https://ddas.onrender.com/api/files";
 
 export default function FileList() {
   const [files, setFiles] = useState([]);
@@ -14,6 +14,10 @@ export default function FileList() {
   useEffect(() => {
     loadFiles();
     window.addEventListener("refreshFiles", loadFiles);
+
+    return () => {
+      window.removeEventListener("refreshFiles", loadFiles);
+    };
   }, []);
 
   return (
@@ -24,8 +28,13 @@ export default function FileList() {
 
       {files.map((f) => (
         <div key={f._id} className="file-row">
-          <p><strong>{f.originalName}</strong></p>
-          <p>{new Date(f.uploadedAt).toLocaleString()}</p>
+          <p><strong>{f.name}</strong></p>
+
+          <a href={f.url} target="_blank" rel="noreferrer">
+            View File
+          </a>
+
+          <p>{new Date(f.createdAt).toLocaleString()}</p>
         </div>
       ))}
     </div>
