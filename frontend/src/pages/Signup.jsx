@@ -14,7 +14,6 @@ export default function Signup() {
 
     try {
       await axios.post("https://ddas.onrender.com/api/auth/signup", {
-
         name,
         email,
         password,
@@ -29,7 +28,9 @@ export default function Signup() {
   return (
     <div className="auth-container">
       <form className="auth-card" onSubmit={handleSignup}>
-        <h2 className="auth-title">Create Account</h2>
+        
+        <h2 className="auth-title">DDAS</h2>
+        <p className="auth-subtitle">DDoS Attack Detection System</p>
 
         <input
           className="auth-input"
@@ -59,15 +60,15 @@ export default function Signup() {
         />
 
         <button className="auth-btn" type="submit">
-          Sign Up
+          Create Account
         </button>
 
-        <p className="auth-text">{message}</p>
+        {message && <p className="auth-text">{message}</p>}
 
         <p className="auth-text">
-           Already have an account? <Link to="/login">Login</Link>
-
+          Already have an account? <Link to="/login">Login</Link>
         </p>
+
       </form>
     </div>
   );

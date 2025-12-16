@@ -1,58 +1,134 @@
+/* Full page background */
 .auth-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #000;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at center, #0a0a0a, #000);
+  overflow: hidden;
 }
 
+/* Glassmorphism card */
 .auth-card {
-    width: 350px;
-    padding: 35px;
-    background: #1b1b1b;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
-    text-align: center;
+  width: 380px;
+  padding: 40px;
+  border-radius: 16px;
+  background: rgba(20, 20, 20, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 80, 80, 0.35);
+
+  box-shadow:
+    0 0 25px rgba(255, 0, 0, 0.45),
+    inset 0 0 25px rgba(255, 0, 0, 0.15);
+
+  text-align: center;
+  position: relative;
 }
 
+/* Red glowing outline */
+.auth-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ff2a2a, transparent, #ff2a2a);
+  opacity: 0.6;
+  z-index: -1;
+  filter: blur(10px);
+}
+
+/* Title */
 .auth-title {
-    color: #fff;
-    margin-bottom: 20px;
-    font-size: 26px;
+  color: #ffffff;
+  font-size: 30px;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
 }
 
+/* Subtitle */
+.auth-subtitle {
+  color: #aaa;
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+/* Input fields */
 .auth-input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 6px;
-    background: #eef2ff;
-    font-size: 15px;
+  width: 100%;
+  padding: 14px 14px;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 15px;
+  outline: none;
 }
 
+.auth-input::placeholder {
+  color: #bbb;
+}
+
+.auth-input:focus {
+  border-color: #ff4040;
+  box-shadow: 0 0 8px rgba(255, 64, 64, 0.6);
+}
+
+/* Login / Signup button */
 .auth-btn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 15px;
-    background: #ff4040;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
+  width: 100%;
+  padding: 14px;
+  margin-top: 18px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #ff3b3b, #b30000);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .auth-btn:hover {
-    background: #d93434;
+  transform: translateY(-1px);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
 }
 
+.auth-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Bottom text */
 .auth-text {
-    color: #ccc;
-    margin-top: 12px;
-    font-size: 14px;
+  margin-top: 18px;
+  font-size: 14px;
+  color: #ccc;
 }
 
 .auth-text a {
-    color: #ff5b5b;
+  color: #ff4d4d;
+  text-decoration: none;
+}
+
+.auth-text a:hover {
+  text-decoration: underline;
+}
+
+/* Loader spinner */
+.loader {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
