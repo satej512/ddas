@@ -7,12 +7,15 @@
     justify-content: center;
     align-items: center;
 
-   background: url("/cyber-bg.png") left top / 300px no-repeat;
-background-color: yellow;
-    background-color: #000;
+    background-image: url("/cyber-bg.png");
+    background-size: cover;        /* FULL SCREEN */
+    background-position: center;   /* CENTER IMAGE */
+    background-repeat: no-repeat;  /* NO TILING */
 
     font-family: 'Rajdhani', sans-serif;
 }
+
+
 
 
 /* ===== GLASS CARD ===== */
