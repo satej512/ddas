@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url("/cyber-bg.png") center/cover no-repeat;
+    background: url("../assets/cyber-bg.png") center/cover no-repeat;
     font-family: 'Rajdhani', sans-serif;
 }
 
