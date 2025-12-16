@@ -1,12 +1,19 @@
 /* ===== GLOBAL BACKGROUND ===== */
 .auth-container {
-    height: 100vh;
+    min-height: 100vh;
+    width: 100vw;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url("/cyber-bg.png") center / cover no-repeat;
+
+   background: url("/cyber-bg.png") left top / 300px no-repeat;
+background-color: yellow;
+    background-color: #000;
+
     font-family: 'Rajdhani', sans-serif;
 }
+
 
 /* ===== GLASS CARD ===== */
 .auth-card {
