@@ -28,12 +28,15 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       });
     }
 
-    // 3️⃣ Upload to Cloudinary (image + audio + video)
+    // 🔥 DETECT PDF
+    const isPdf = req.file.mimetype === "application/pdf";
+
+    // 3️⃣ Upload to Cloudinary (FIXED)
     cloudinary.uploader
       .upload_stream(
         {
           folder: "ddas_uploads",
-          resource_type: "auto", // 🔥 VERY IMPORTANT (fixes audio)
+          resource_type: isPdf ? "raw" : "auto", // ✅ MAIN FIX
         },
         async (error, result) => {
           if (error) {
@@ -60,7 +63,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
           });
         }
       )
-      .end(req.file.buffer); // 👈 send file bytes
+      .end(req.file.buffer); // send file bytes
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Upload failed" });
